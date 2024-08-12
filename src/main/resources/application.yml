@@ -1,0 +1,29 @@
+server:
+  port: 7777
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/tb_9791189184124?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=UTC&useSSL=false
+    username: root
+    password: 1111
+    hikari:
+      initialization-fail-timeout: 60000
+      minimum-idle: 2
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect # MySQL ??? ?? ????? ??
+    show-sql: true
+    properties:
+      hibernate.format_sql: true  # SQL ???? ?? ??
+      hibernate.use_sql_comments: true  # SQL? ??? ???? ?? ?? ?? ?? ??
+
+logging:
+  level:
+    org.springframework.security: TRACE
+    com.songko: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
