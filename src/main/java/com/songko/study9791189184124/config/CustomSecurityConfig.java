@@ -12,6 +12,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Log4j2
 @EnableMethodSecurity(prePostEnabled = true)
@@ -51,6 +56,26 @@ public class CustomSecurityConfig {
         // jwtCheckFilter를 UsernamePasswordAuthenticationFilter 앞에서 동작하도록 설정
         httpSecurity.addFilterBefore(jwtCheckFilter, UsernamePasswordAuthenticationFilter.class);
 
+        // cors 설정
+        httpSecurity.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         return httpSecurity.build();
+    }
+
+    /**
+     * CORS(Cross Origin Resource Sharing) 설정
+     *
+     * @return
+     */
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOriginPatterns(List.of("*"));  // 어디서든 허락
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+        config.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

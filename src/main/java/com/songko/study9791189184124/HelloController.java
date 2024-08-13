@@ -17,6 +17,7 @@ public class HelloController {
         return "hello";
     }
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN') and principal.name == 'user100'")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/samples/list")
     public ResponseEntity<?> list() {

@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -79,16 +81,17 @@ public class JWTCheckFilter extends OncePerRequestFilter {
 
             // 토큰 검증 결과를 이용해서 Authentication 객체를 생성
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                    new CustomUserPrincipal(mid),
-                    null,
-                    Arrays.stream(roles)
+                    new CustomUserPrincipal(mid),   // Principal
+                    null,   // Credentials
+                    Arrays.stream(roles)    // Authorities
                             .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                             .collect(Collectors.toList())
             );
 
-            // TODO
-
-
+            //SecurityContextHolder에 Authentication 객체를 저장.
+            // 이후에 SecurityContextHolder를 이용해서 Authentication 객체를 꺼내서 사용할 수 있다.
+            SecurityContext context = SecurityContextHolder.getContext();
+            context.setAuthentication(authenticationToken);
 
             filterChain.doFilter(request, response);
 
